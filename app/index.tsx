@@ -52,15 +52,38 @@ export default function App() {
 }
 
 function ListScreen({ darkTheme }) {
+  const pcBrands = [
+    "Dell",
+    "HP",
+    "Lenovo",
+    "Asus",
+    "Acer",
+    "Apple",
+    "MSI",
+    "Gigabyte",
+  ];
+  const pcSpecs = [
+    "Intel i5, 8GB RAM",
+    "Intel i7, 16GB RAM",
+    "AMD Ryzen 5, 8GB RAM",
+    "AMD Ryzen 7, 16GB RAM",
+  ];
+  const pcImages = [
+    require("./assets/comp1.png"),
+    require("./assets/comp2.png"),
+    require("./assets/comp3.png"),
+  ];
+
   const items = Array.from({ length: 20 }, (_, index) => ({
     id: index.toString(),
-    title: `Комп'ютер ${index + 1}`,
-    description: `Опис для комп'ютера ${index + 1}`,
+    title: `${pcBrands[index % pcBrands.length]} #${index + 1}`,
+    description: `${pcSpecs[index % pcSpecs.length]}`,
+    image: pcImages[index % pcImages.length],
   }));
 
   const renderItem = ({ item }) => (
     <View style={[styles.card, darkTheme && styles.darkCard]}>
-      <Image source={require("./assets/desktop-pc.png")} style={styles.image} />
+      <Image source={item.image} style={styles.image} />
       <Text style={[styles.title, darkTheme && styles.darkText]}>
         {item.title}
       </Text>
