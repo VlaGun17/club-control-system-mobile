@@ -20,6 +20,9 @@
   "language": "Language",
   "ukranian": "Ukranian",
   "english": "English",
+  "currentLogin": "Current Login",
+  "currentPassword": "Current Password",
+  "logout": "Logout",
   "alertPickImage": "Sorry, you need permission to access the gallery!",
   "alertAddComp": "Fill in all the fields and select a photo!"
 }
