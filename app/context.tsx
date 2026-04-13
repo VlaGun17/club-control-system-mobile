@@ -7,6 +7,7 @@ interface AppContextType {
   deleteItem: (id: string) => void;
   darkTheme: boolean;
   setDarkTheme: (value: boolean) => void;
+  updateItem: (item: Item) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -42,9 +43,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const updateItem = (updatedItem: Item) => {
+    setItems((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
+    );
+  };
+
   return (
     <AppContext.Provider
-      value={{ items, addItem, deleteItem, darkTheme, setDarkTheme }}
+      value={{
+        items,
+        addItem,
+        deleteItem,
+        darkTheme,
+        setDarkTheme,
+        updateItem,
+      }}
     >
       {children}
     </AppContext.Provider>

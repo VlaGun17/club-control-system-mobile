@@ -1,3 +1,4 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -15,9 +16,10 @@ import { Item } from "./types";
 interface ListScreenProps {
   darkTheme: boolean;
   items: Item[];
+  navigation: StackNavigationProp<any>;
 }
 
-export function ListScreen({ darkTheme, items }: ListScreenProps) {
+export function ListScreen({ darkTheme, items, navigation }: ListScreenProps) {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const { t } = useTranslation();
@@ -87,24 +89,57 @@ export function ListScreen({ darkTheme, items }: ListScreenProps) {
               >
                 {selectedItem.description}
               </Text>
-              <TouchableOpacity
+              <View
                 style={{
-                  padding: 10,
-                  backgroundColor: "#007bff",
-                  borderRadius: 10,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 20,
+                  gap: 10,
                 }}
-                onPress={closeDetails}
               >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    darkTheme && styles.darkText,
-                    { color: "#fff" },
-                  ]}
+                <TouchableOpacity
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#007bff",
+                    borderRadius: 10,
+                  }}
+                  onPress={() => {
+                    closeDetails();
+                    navigation.navigate("ItemDetails", {
+                      post: selectedItem,
+                    });
+                  }}
                 >
-                  {t("closeButtonText")}
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      darkTheme && styles.darkText,
+                      { color: "#fff" },
+                    ]}
+                  >
+                    Детальніше
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#007bff",
+                    borderRadius: 10,
+                  }}
+                  onPress={closeDetails}
+                >
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      darkTheme && styles.darkText,
+                      { color: "#fff" },
+                    ]}
+                  >
+                    {t("closeButtonText")}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>

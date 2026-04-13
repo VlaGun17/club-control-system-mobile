@@ -2,6 +2,7 @@
   "menu": "Menu",
   "list": "List",
   "control": "Computer Management",
+  "news": "News",
   "settings": "Settings",
   "addComputer": "Add Computer",
   "deleteComputer": "Delete Computer",

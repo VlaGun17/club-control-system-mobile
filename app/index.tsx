@@ -1,5 +1,6 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
@@ -10,12 +11,17 @@ import { AuthScreen } from "./AuthScreen";
 import { ComputerManagementScreen } from "./ComputerManagementScreen";
 import { AppProvider, useAppContext } from "./context";
 import { DeleteScreen } from "./DeleteScreen";
+import { DetailScreen } from "./DetailScreen";
+import { EditScreen } from "./EditScreen";
 import "./i18n";
+import { ItemDetailsScreen } from "./ItemDetailScreen";
 import { ListScreen } from "./ListScreen";
+import { NewsScreen } from "./NewsScreen";
 import { SettingsScreen } from "./SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+const queryClient = new QueryClient();
 
 function DrawerNavigator() {
   const { darkTheme, setDarkTheme, items, addItem, deleteItem } =
@@ -45,7 +51,7 @@ function DrawerNavigator() {
           ),
         }}
       >
-        {() => (
+        {(props) => (
           <View
             style={[
               { flex: 1 },
@@ -54,7 +60,7 @@ function DrawerNavigator() {
                 : { backgroundColor: "#fff" },
             ]}
           >
-            <ListScreen darkTheme={darkTheme} items={items} />
+            <ListScreen {...props} darkTheme={darkTheme} items={items} />
           </View>
         )}
       </Drawer.Screen>
@@ -72,7 +78,7 @@ function DrawerNavigator() {
           ),
         }}
       >
-        {(props) => (
+        {({ navigation }) => (
           <View
             style={[
               { flex: 1 },
@@ -84,9 +90,36 @@ function DrawerNavigator() {
             <ComputerManagementScreen
               darkTheme={darkTheme}
               setScreen={(screen) =>
-                props.navigation.navigate(screen === "add" ? "Add" : "Delete")
+                navigation.navigate(screen === "add" ? "Add" : "Delete")
               }
             />
+          </View>
+        )}
+      </Drawer.Screen>
+
+      <Drawer.Screen
+        name="News"
+        options={{
+          title: t("news"),
+          drawerIcon: ({ color, size }) => (
+            <Ionicons
+              name="newspaper"
+              color={darkTheme ? (color = "#fff") : (color = "#333")}
+              size={size}
+            />
+          ),
+        }}
+      >
+        {(props) => (
+          <View
+            style={[
+              { flex: 1 },
+              darkTheme
+                ? { backgroundColor: "#333" }
+                : { backgroundColor: "#fff" },
+            ]}
+          >
+            <NewsScreen {...props} darkTheme={darkTheme} />
           </View>
         )}
       </Drawer.Screen>
@@ -125,7 +158,7 @@ function DrawerNavigator() {
           title: t("addComputer"),
         }}
       >
-        {(props) => (
+        {({ navigation }) => (
           <View
             style={[
               { flex: 1 },
@@ -138,7 +171,7 @@ function DrawerNavigator() {
               darkTheme={darkTheme}
               onAdd={(item) => {
                 addItem(item);
-                props.navigation.navigate("List");
+                navigation.navigate("List");
               }}
             />
           </View>
@@ -175,7 +208,7 @@ function DrawerNavigator() {
 
 function NavigationRoot() {
   const { user } = useAuth();
-  const { darkTheme } = useAppContext();
+  const { darkTheme, updateItem } = useAppContext();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -186,16 +219,34 @@ function NavigationRoot() {
           {(props) => <AuthScreen {...props} darkTheme={darkTheme} />}
         </Stack.Screen>
       )}
+
+      <Stack.Screen name="Details">
+        {(props) => <DetailScreen {...props} darkTheme={darkTheme} />}
+      </Stack.Screen>
+      <Stack.Screen name="ItemDetails">
+        {(props) => <ItemDetailsScreen {...props} darkTheme={darkTheme} />}
+      </Stack.Screen>
+      <Stack.Screen name="Edit">
+        {(props) => (
+          <EditScreen
+            {...props}
+            darkTheme={darkTheme}
+            updateItem={updateItem}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <AppProvider>
-        <NavigationRoot />
-      </AppProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <AppProvider>
+          <NavigationRoot />
+        </AppProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
