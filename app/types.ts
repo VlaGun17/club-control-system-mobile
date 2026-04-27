@@ -6,3 +6,10 @@ export interface Item {
   description: string;
   image: ImageSourcePropType | string;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+}

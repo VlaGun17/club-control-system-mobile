@@ -58,7 +58,7 @@ export function ListScreen({ darkTheme, items, navigation }: ListScreenProps) {
   };
 
   return (
-    <View>
+    <View style={[styles.container, darkTheme && styles.darkContainer]}>
       <FlatList
         data={items}
         renderItem={renderItem}

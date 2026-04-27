@@ -1,4 +1,4 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { StackActions, useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useAppContext } from "./context";
@@ -19,7 +19,7 @@ export function ItemDetailsScreen({ route, navigation, darkTheme }) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, darkTheme && styles.darkContainer]}>
       {item?.image && (
         <Image
           source={
@@ -52,7 +52,9 @@ export function ItemDetailsScreen({ route, navigation, darkTheme }) {
           darkTheme && styles.darkButton,
           { marginTop: 10 },
         ]}
-        onPress={() => navigation.navigate("MainApp", { screen: "List" })}
+        onPress={() => {
+          navigation.dispatch(StackActions.replace("MainApp"));
+        }}
       >
         <Text style={[styles.buttonText, darkTheme && styles.darkText]}>
           Назад

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
+import useStore from "./store/useStore";
 import { Item } from "./types";
 
 interface AppContextType {
@@ -13,51 +14,17 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [darkTheme, setDarkTheme] = useState(false);
-  const [items, setItems] = useState<Item[]>([
-    {
-      id: "1",
-      title: "Dell XPS 15",
-      description: "Intel i7, 16GB RAM",
-      image: require("./assets/comp1.png"),
-    },
-    {
-      id: "2",
-      title: "HP Spectre x360",
-      description: "Intel i5, 8GB RAM",
-      image: require("./assets/comp2.png"),
-    },
-    {
-      id: "3",
-      title: "Lenovo ThinkPad X1",
-      description: "AMD Ryzen 7, 16GB RAM",
-      image: require("./assets/comp3.png"),
-    },
-  ]);
-
-  const addItem = (newItem: Item) => {
-    setItems((prev) => [newItem, ...prev]);
-  };
-
-  const deleteItem = (id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const updateItem = (updatedItem: Item) => {
-    setItems((prev) =>
-      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
-    );
-  };
+  const store = useStore();
 
   return (
     <AppContext.Provider
       value={{
-        items,
-        addItem,
-        deleteItem,
-        darkTheme,
-        setDarkTheme,
-        updateItem,
+        items: store.items,
+        addItem: store.addItem,
+        deleteItem: store.deleteItem,
+        darkTheme: store.darkTheme,
+        setDarkTheme: store.setDarkTheme,
+        updateItem: store.updateItem,
       }}
     >
       {children}

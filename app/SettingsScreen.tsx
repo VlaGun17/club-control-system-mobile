@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useAuth } from "./AuthContext";
+import useStore from "./store/useStore";
 import { styles } from "./styles";
 
 interface SettingsScreenProps {
@@ -21,7 +21,7 @@ export function SettingsScreen({
   setDarkTheme,
 }: SettingsScreenProps) {
   const { t, i18n } = useTranslation();
-  const { user, logout } = useAuth();
+  const { user, logout, sessionOnly, setSessionOnly } = useStore();
 
   const imageUrl =
     "https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1";
@@ -58,7 +58,7 @@ export function SettingsScreen({
             darkTheme && styles.darkText,
           ]}
         >
-          {user?.username}
+          {user?.name}
         </Text>
       </View>
 
@@ -86,6 +86,13 @@ export function SettingsScreen({
           value={isUkrainian}
           onValueChange={(value) => changeLanguage(value ? "ua" : "en")}
         />
+      </View>
+
+      <View style={styles.settingRow}>
+        <Text style={[styles.settingText, darkTheme && styles.darkText]}>
+          {t("sessionOnly")}
+        </Text>
+        <Switch value={sessionOnly} onValueChange={setSessionOnly} />
       </View>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>

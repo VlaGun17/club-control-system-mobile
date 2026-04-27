@@ -1,11 +1,18 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
+import useStore from "./store/useStore";
 
-const AuthContext = createContext();
+interface AuthContextType {
+  user: any;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => void;
+}
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+const AuthContext = createContext<AuthContextType | null>(null);
 
-  const login = async (email, password) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user, setUser } = useStore();
+
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await fetch("https://reqres.in/api/login", {
         method: "POST",
@@ -20,14 +27,13 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setUser({ name: email, token: data.token });
+        setUser({ id: "1", name: email, password: password, email: email });
         return true;
       } else {
         alert("Помилка API: " + (data.error || "Невірні дані"));
         return false;
       }
     } catch (error) {
-      alert("Помилка мережі" + error.message);
       return false;
     }
   };

@@ -24,6 +24,7 @@
   "currentLogin": "Current Login",
   "currentPassword": "Current Password",
   "logout": "Logout",
+  "sessionOnly": "Session Only",
   "alertPickImage": "Sorry, you need permission to access the gallery!",
   "alertAddComp": "Fill in all the fields and select a photo!"
 }
